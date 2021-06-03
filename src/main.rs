@@ -1,10 +1,11 @@
-use actix_web::{get, web, App, HttpServer, Responder};
+mod http;
+mod models;
+mod libs;
 
-#[get("/{id}")]
-async fn index(path : web::Path<(u32)>) -> impl Responder {
-    let (i+2d) = path.into_inner();
-    format!("Hello {}! ", id)
-}
+use models::User;
+use http::*;
+
+use actix_web::{App, HttpServer};
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -13,3 +14,4 @@ async fn main() -> std::io::Result<()> {
         .run()
         .await
 }
+

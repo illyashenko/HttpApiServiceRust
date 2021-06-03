@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/appHttpMicroService.iml" filepath="$PROJECT_DIR$/appHttpMicroService.iml" />
+      <module fileurl="file://$PROJECT_DIR$/data_base.iml" filepath="$PROJECT_DIR$/data_base.iml" />
+      <module fileurl="file://$PROJECT_DIR$/http_service.iml" filepath="$PROJECT_DIR$/http_service.iml" />
     </modules>
   </component>
 </project>
