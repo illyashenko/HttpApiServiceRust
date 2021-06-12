@@ -1,4 +1,4 @@
-use postgres::{Column, Row};
+use tokio_postgres::{Row, Column};
 use crate::models::User;
 
 pub fn user_mapper(row: &Row)->User{

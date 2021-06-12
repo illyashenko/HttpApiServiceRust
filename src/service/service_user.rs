@@ -1,19 +1,19 @@
 use crate::dao::*;
 use crate::models::User;
-use postgres::Error;
+use tokio_postgres::Error;
 
 pub struct ServiceUser{
     dao: DaoUser
 }
 impl ServiceUser{
-    pub fn new()->ServiceUser{
+    pub async fn new()->ServiceUser{
         ServiceUser{
-            dao: DaoUser::new()
+            dao: DaoUser::new().await
         }
     }
 }
 impl ServiceUser{
-    pub fn get_user(&mut self, email: String) -> Result<User, Error> {
-        self.dao.get_user(email)
+    pub async fn get_user(&mut self, email: String) -> Result<User, String> {
+        self.dao.get_user(email).await
     }
 }
