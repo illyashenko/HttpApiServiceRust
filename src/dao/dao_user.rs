@@ -24,6 +24,21 @@ impl DaoUser{
         Result::Ok(user_mapper(&selection[0]))
         }
     }
+    pub async fn create_user(&mut self, user: User) -> Result<(), ()> {
+
+        let create = self.context.client
+                                  .query("INSERT INTO guids_users (UUID, login, pass, email, phone, name, notvalid)\
+                                                   VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING true",
+                                         &[&user.uuid, &user.login.as_str(),
+                                                  &user.pass.as_str(),&user.email.as_str(),
+                                                  &user.phone.as_str(), &user.name.as_str(), &user.notvalid]).await.unwrap();
+        if create[0].get(0) {
+            Result::Ok(())
+        }
+        else {
+            Result::Err(())
+        }
+    }
 }
 
 
