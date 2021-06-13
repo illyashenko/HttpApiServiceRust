@@ -3,7 +3,6 @@ use crate::test::*;
 use crate::service::*;
 use serde::{Serialize, Deserialize};
 use actix_web::{get, post, web, Responder, HttpResponse};
-use actix_web::web::Form;
 
 #[get("/user/{email}")]
 pub async fn get_user_by_email(path : web::Path<(String)>) -> impl Responder {
