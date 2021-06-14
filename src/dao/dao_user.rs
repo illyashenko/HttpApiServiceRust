@@ -40,7 +40,9 @@ impl DaoUser{
         }
     }
     pub async fn delete_user(&mut self, email: &String)->Result<(),()>{
-        let result = self.context.client.query("", &[&email]).await.unwrap();
+        let result = self.context.client
+                                 .query("DELETE FROM guids_users WHERE email = $1 RETURNING true",
+                                        &[email]).await.unwrap();
         if result[0].get(0) {
             Result::Ok(())
         }
