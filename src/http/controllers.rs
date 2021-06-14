@@ -42,7 +42,16 @@ async fn create_new_user(req: String) -> impl Responder {
 
 #[delete("/{email}")]
 async fn delete_user(path: web::Path<String>)-> impl Responder{
-    HttpResponse::BadRequest().content_type("application/json").body("error")
+    let email = path.into_inner();
+    let result = ServiceUser::new().await.delete_user(&email).await;
+    match result {
+        Ok(()) => {
+            HttpResponse::Ok().content_type("application/json").body(format!("delete {:?}", email))
+        }
+        Err(()) => {
+            HttpResponse::NotFound().body("error")
+        }
+    }
 }
 
 #[put("/{email}")]
