@@ -14,7 +14,7 @@ impl ServiceUser{
     }
 }
 impl ServiceUser{
-    pub async fn get_user(&mut self, email: String) -> Result<User, String> {
+    pub async fn get_user(&mut self, email: String) -> Result<User, ()> {
         self.dao.get_user(email).await
     }
     pub async fn create_user(&mut self, req_user: ReqUser) -> Result<(), ()>{

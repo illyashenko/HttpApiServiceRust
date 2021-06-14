@@ -2,24 +2,32 @@ use crate::models::*;
 use crate::test::*;
 use crate::service::*;
 use serde::{Serialize, Deserialize};
-use actix_web::{get, post, web, Responder, HttpResponse};
+use actix_web::{get, post, put, delete, web, Responder, HttpResponse, Scope};
 
-#[get("/user/{email}")]
-pub async fn get_user_by_email(path : web::Path<(String)>) -> impl Responder {
+pub fn user_scope() -> Scope{
+   web::scope("/user")
+       .service(get_user_by_email)
+       .service(create_new_user)
+       .service(delete_user)
+       .service(update_user)
+}
+
+#[get("/{email}")]
+async fn get_user_by_email(path : web::Path<(String)>) -> impl Responder {
     let user = ServiceUser::new().await.get_user(path.into_inner()).await;
     match user {
         Ok(answer) => {
             let json_answer = serde_json::to_string(&answer).unwrap();
             HttpResponse::Ok().content_type("application/json").body(json_answer)
         }
-        Err(err) => {
-            HttpResponse::NotFound().body(err)
+        Err(()) => {
+            HttpResponse::NotFound().body("")
         }
     }
 }
 
-#[post("/user/create/")]
-pub async fn create_new_user(req: String) -> impl Responder {
+#[post("/")]
+async fn create_new_user(req: String) -> impl Responder {
     let user : ReqUser = serde_json::from_str(req.as_str()).unwrap();
     let answer = ServiceUser::new().await.create_user(user).await;
     match answer {
@@ -31,4 +39,15 @@ pub async fn create_new_user(req: String) -> impl Responder {
         }
     }
 }
+
+#[delete("/{email}")]
+async fn delete_user(path: web::Path<String>)-> impl Responder{
+    HttpResponse::BadRequest().content_type("application/json").body("error")
+}
+
+#[put("/{email}")]
+async fn update_user(path: web::Path<String>)-> impl Responder{
+    HttpResponse::BadRequest().content_type("application/json").body("error")
+}
+
 

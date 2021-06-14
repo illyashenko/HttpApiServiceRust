@@ -13,12 +13,12 @@ impl DaoUser{
     }
 }
 impl DaoUser{
-    pub async fn get_user(&mut self, email: String)->Result<User, String>{
+    pub async fn get_user(&mut self, email: String)->Result<User, ()>{
         let selection  = self.context.client
                                  .query("SELECT * FROM guids_users WHERE email = $1",
                                      &[&email.as_str()]).await.unwrap();
         if selection.len() > 1 || selection.len() == 0 {
-            Result::Err(String::from("404"))
+            Result::Err(())
         }
         else {
         Result::Ok(user_mapper(&selection[0]))
