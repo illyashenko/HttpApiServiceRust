@@ -4,7 +4,7 @@ use crate::sql_mapper::{user_mapper};
 use tokio_postgres::{Row, Error};
 use async_trait::async_trait;
 
-#[async_trait]
+#[async_trait] // Interface
 pub trait IDaoUser{
     async fn get_user(&mut self, email: String)->Result<User, ()>;
     async fn create_user(&mut self, user: User) -> Result<(), ()>;
@@ -14,7 +14,7 @@ pub trait IDaoUser{
 pub struct DaoUser{
     context: Context
 }
-
+// Constructor
 impl DaoUser{
     pub async fn new() -> DaoUser {
         DaoUser{context: ContextBuilder::new().await.unwrap()}
