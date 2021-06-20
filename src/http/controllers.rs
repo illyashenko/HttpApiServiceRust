@@ -1,7 +1,7 @@
 use crate::models::*;
 use crate::test::*;
 use crate::service::*;
-use crate::dao::DaoUser;
+use crate::dao::*;
 use serde::{Serialize, Deserialize};
 use actix_web::{get, post, put, delete, web, Responder, HttpResponse, Scope};
 
@@ -15,7 +15,10 @@ pub fn user_scope() -> Scope{
 
 #[get("/{email}")]
 async fn get_user_by_email(path : web::Path<(String)>) -> impl Responder {
-    let user = ServiceUser::new(Box::new(DaoUser::new().await)).await.get_user(path.into_inner()).await;
+    let user = ServiceUser::new(Box::new(
+                                          DaoUser::new().await))
+                                          .await.get_user(path.into_inner())
+                                          .await;
     match user {
         Ok(answer) => {
             let json_answer = serde_json::to_string(&answer).unwrap();
