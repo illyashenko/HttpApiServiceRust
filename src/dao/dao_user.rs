@@ -12,6 +12,7 @@ impl DaoUser{
         DaoUser{context: ContextBuilder::new().await.unwrap()}
     }
 }
+
 impl DaoUser{
     pub async fn get_user(&mut self, email: String)->Result<User, ()>{
         let selection  = self.context.client
@@ -24,6 +25,7 @@ impl DaoUser{
         Result::Ok(user_mapper(&selection[0]))
         }
     }
+
     pub async fn create_user(&mut self, user: User) -> Result<(), ()> {
 
         let create = self.context.client

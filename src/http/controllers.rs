@@ -1,6 +1,7 @@
 use crate::models::*;
 use crate::test::*;
 use crate::service::*;
+use crate::dao::DaoUser;
 use serde::{Serialize, Deserialize};
 use actix_web::{get, post, put, delete, web, Responder, HttpResponse, Scope};
 
@@ -14,7 +15,7 @@ pub fn user_scope() -> Scope{
 
 #[get("/{email}")]
 async fn get_user_by_email(path : web::Path<(String)>) -> impl Responder {
-    let user = ServiceUser::new().await.get_user(path.into_inner()).await;
+    let user = ServiceUser::new(Box::new(DaoUser::new().await)).await.get_user(path.into_inner()).await;
     match user {
         Ok(answer) => {
             let json_answer = serde_json::to_string(&answer).unwrap();
@@ -29,7 +30,7 @@ async fn get_user_by_email(path : web::Path<(String)>) -> impl Responder {
 #[post("/")]
 async fn create_new_user(req: String) -> impl Responder {
     let user : ReqUser = serde_json::from_str(req.as_str()).unwrap();
-    let answer = ServiceUser::new().await.create_user(user).await;
+    let answer = ServiceUser::new(Box::new(DaoUser::new().await)).await.create_user(user).await;
     match answer {
         Ok(()) => {
             HttpResponse::Ok().content_type("application/json").body("user create")
@@ -43,7 +44,7 @@ async fn create_new_user(req: String) -> impl Responder {
 #[delete("/{email}")]
 async fn delete_user(path: web::Path<String>)-> impl Responder{
     let email = path.into_inner();
-    let result = ServiceUser::new().await.delete_user(&email).await;
+    let result = ServiceUser::new(Box::new(DaoUser::new().await)).await.delete_user(&email).await;
     match result {
         Ok(()) => {
             HttpResponse::Ok().content_type("application/json").body(format!("delete {:?}", email))
