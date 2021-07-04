@@ -23,12 +23,10 @@ impl IDaoUser for DaoUser{
         let selection  = context.client
                                  .query("SELECT * FROM guids_users WHERE email = $1",
                                      &[&email.as_str()]).await.unwrap();
-        if selection.len() > 1 || selection.len() == 0 {
-            Result::Err(())
+        if !selection.len() == 1 {
+           return Result::Err(())
         }
-        else {
         Result::Ok(user_mapper(&selection[0]))
-        }
     }
     async fn create_user(&mut self, user: User) -> Result<(), ()> {
         let context = ContextBuilder::new().await.unwrap();
@@ -38,24 +36,21 @@ impl IDaoUser for DaoUser{
                                          &[&user.uuid, &user.login.as_str(),
                                                   &user.pass.as_str(),&user.email.as_str(),
                                                   &user.phone.as_str(), &user.name.as_str(), &user.notvalid]).await.unwrap();
-        if create[0].get(0) {
-            Result::Ok(())
+        if !create.is_empty() {
+          return Result::Ok(())
         }
-        else {
-            Result::Err(())
-        }
+        Result::Err(())
+
     }
     async fn delete_user(&mut self, email: &String)->Result<(),()>{
         let context = ContextBuilder::new().await.unwrap();
         let result = context.client
                                  .query("DELETE FROM guids_users WHERE email = $1 RETURNING true",
                                         &[email]).await.unwrap();
-        if result[0].get(0) {
-            Result::Ok(())
+        if !result.is_empty() {
+          return  Result::Ok(())
         }
-        else {
-            Result::Err(())
-        }
+        Result::Err(())
     }
 }
 

@@ -3,7 +3,6 @@ use crate::models::{User, UserBuilder, ReqUser};
 use crate::additional_service::*;
 use tokio_postgres::Error;
 use actix_web::web::{Form};
-use async_trait::async_trait;
 use waiter_di::*;
 
 #[module]
